@@ -7,12 +7,27 @@ define vi = Character('Василина', color="#da27a4")
 
 label start:
 
+    scene bg class
+
+    show leo normal
+    v "Привет!"
+    hide leo
+
+    show saki curious
+    vi "Привет, что ты тут забыл?"
+
+    scene bg corridor
+    with fade
+
+    show leo angry
+    v "Как тут грязно! Пошли к тебе домой!"
+    
     scene bg room
+    with fade 
+    show agustina smile
 
-    show eileen happy
+    "Creator" "Ive been waiting for you so long time!"
 
-    v "Привет Мир, Я Shish!"
-    vi "Привет Вася, я Василина"
-    "Creater" "They have met each other long time ago"
-
+    
+  
     return
