@@ -1,4 +1,4 @@
-﻿
+
 
 define e = Character('Эйлин', color="#021b02")
 define v = Character('Василий', color="#f70202", image='leo')
@@ -11,41 +11,32 @@ init:
 
 label start:
 
-    scene bg class
-    with fade
+    scene bg class with fade
+    show leo smiling at right2 with dissolve 
+    show saki curious at left2 with moveinleft
 
-    show leo smiling at right2
-    with dissolve
-    
-    show saki curious at left2
-    with moveinleft
+    "Василина студентка с любовником"
+    "ходит на пары а после проводит время с любовником"
+    "муж узнает об измене"
 
-    v "Привет, давай знакомиться"
-    vi @ worried "Я не ем морковку, спасибо"
-    v blush"Это у меня только шапка морковная, внизу — {w=2} угольная шахта"
-    vi angry "Катись к чёрту"
-    show saki surprised
-    extend " витамин D на ножках"
+    menu: 
+        "Что делать?"
 
-    vi '''
-    Производим длинный
+        "Расстаться с мужем":
+            jump breakup
+        
+        "Не расставаться с мужем":
+            jump dontbreakup
 
-    Бабский монолог
+    return
 
-    Проверка сплочения блоков
-    
-    Внутри тройных кавычек
-    '''
+label breakup:
 
-    v sad "ёбаный вагинокапитализм"  
+    "Василина решает расстаться с мужем"
 
+    return
 
-    hide leo with dissolve
-    hide saki with moveoutleft
+label dontbreakup:
+    "василиса решает все исправить"
 
-    #scene bg room with pushleft
-    #scene bg school with wipeleft
-    #with blinds
-
-    "Creator" "Pause"
     return
