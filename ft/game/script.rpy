@@ -1,32 +1,10 @@
-
-
-define e = Character('Эйлин', color="#021b02")
-define v = Character('Василий', color="#f70202", image='leo')
-define vi = Character('[viname]', color="#a8e600", image='saki')
-
-# Оскорбление мужа
-define husbandInsult = False
-define familyMoneySold = False 
-
-
-
-init:
-    $ right2 = Position(xalign=0.85,yalign=1.0)
-    $ left2 = Position(xalign=0.55,yalign=1.0)
-
-
 label start:
 
     scene bg class with fade
 
-    menu:
-        "какой логотип будет?"
+    n "Давным-давно в далекой далекой галактике"
 
-        "{image=images/images.png}":
-            "Пингквин"
-
-        "{image=images/images.png}":
-            "Идиот"
+    nvl hide
 
     $ viname = renpy.input("Введите имя персонажа: ", length = 12, allow="йцукенгшшАшшщзхххъфывапролджэячсмитьбю-ЙЦУКЕНГШЩЗХФЫВАПРОЛДЖЭЯЧСМаИТЬБЮ-", default = "Мухамед").strip()
 
@@ -36,8 +14,9 @@ label start:
     show leo smiling at right2 with dissolve 
     show saki curious at left2 with moveinleft
 
-    "{color=#26c218}текст{/color} {i}Тестим кавычки{/i} \"{b}Предохранитель{/b}\" {u}underlinetext{/u} {s} зачеркнутый текст {/s}"
+    #"{color=#26c218}текст{/color} {i}Тестим кавычки{/i} \"{b}Предохранитель{/b}\" {u}underlinetext{/u} {s} зачеркнутый текст {/s}"
 
+    vi "Тестим side картинку"
     "[viname] {image=images/girl/girl blush.png} хочет сделать сеппуку"
     "ходит на пары а после проводит время с любовником"
     menu:
@@ -51,15 +30,16 @@ label start:
             "[viname] не хочет оскорблять мужа"
 
     menu:
-        "Потратить деньги мужа?"
+        "Потратить деньги мужа? У него на карте 150 тысяч"
 
         "Да. Купить себе машину?":
-            "[viname] покупает новенькую бентли"
+            call withdrawMoney
+            "[viname] Снимает деньги с карты"
+
             $ familyMoneySold = True
 
         "Не тратить деньги, воздержаться":
             "[viname] решила сохранить деньги мужа"
-
 
 
     "муж узнает об измене"
@@ -76,8 +56,26 @@ label start:
         "Убить мужа" if husbandInsult and familyMoneySold:
             "Она убила и съела мужа."
 
+        "Сказать спасаибо что не потратила все деньги с карты" if cash > 100:
+            "Спасибо тупая шлюха"
+            jump dontbreakup
 
 
+
+
+    return
+
+label withdrawMoney:
+
+    $ money = renpy.input("Сколько денег снять с карты?", length=3, allow="0123456789").strip() or "0"
+    $ money = int(money)
+    if money > 150:
+        $ money = 150
+
+    "Было [cash] на карте"
+    "Было снято [money] тысяч с карты"
+    $ cash = cash - money
+    "Осталось [cash] рублей"
 
     return
 
