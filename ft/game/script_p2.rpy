@@ -15,3 +15,6 @@ define familyMoneySold = False
 init:
     $ right2 = Position(xalign=0.85,yalign=1.0)
     $ left2 = Position(xalign=0.55,yalign=1.0)
+
+label splashscreen:
+    $ renpy.movie_cutscene("videos/kw.webm")

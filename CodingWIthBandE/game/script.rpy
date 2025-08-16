@@ -1,36 +1,100 @@
-﻿# The script of the game goes in this file.
+﻿define e = Character("Враг")
+define p = Character("Игрок")
 
-# Declare characters used by this game. The color argument colorizes the
-# name of the character.
+init python:
+    # Классы
+    class Skill:
+        def __init__(self, name, damage, cost=0):
+            self.name = name
+            self.damage = damage
+            self.cost = cost
 
-define e = Character("Eileen")
-define steven = Character("Steven", color="#E30000")
+    class CharacterStat:
+        def __init__(self, name, hp, attack, skills):
+            self.name = name
+            self.max_hp = hp
+            self.hp = hp
+            self.attack = attack
+            self.skills = skills
 
+    # Скиллы
+    slash = Skill("Удар", 15)
+    fireball = Skill("Огненный шар", 30, cost=10)
 
-# The game starts here.
+    # Персонажи
+    player = CharacterStat("Герой", 100, 10, [slash, fireball])
+    enemy = CharacterStat("Гоблин", 50, 8, [])
+
+    # Инвентарь
+    inventory = {"Зелье": 3}
+
+    # Функции боя
+    def attack(attacker, target, skill=None):
+        if skill:
+            dmg = skill.damage
+        else:
+            dmg = attacker.attack
+        target.hp -= dmg
+        if target.hp < 0:
+            target.hp = 0
+        return dmg
+
+    def use_item(item_name, target):
+        if inventory.get(item_name, 0) > 0:
+            if item_name == "Зелье":
+                target.hp += 30
+                if target.hp > target.max_hp:
+                    target.hp = target.max_hp
+            inventory[item_name] -= 1
+            return True
+        return False
 
 label start:
+    scene black
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
+    jump battle
 
-    scene bg room
+label battle:
+    $ turn = "player"
+    while player.hp > 0 and enemy.hp > 0:
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
+        if turn == "player":
+            menu:
+                "Атаковать обычным ударом":
+                    $ dmg = attack(player, enemy)
+                    "Вы нанесли [dmg] урона [enemy.name]! У врага осталось HP: [enemy.hp]"
+                    $ turn = "enemy"
 
-    show eileen happy
+                "Использовать навык":
+                    menu:
+                        "Удар":
+                            $ dmg = attack(player, enemy, slash)
+                            "Вы использовали Удар! Урон: [dmg]. У врага осталось HP: [enemy.hp]"
+                            $ turn = "enemy"
+                        "Огненный шар":
+                            $ dmg = attack(player, enemy, fireball)
+                            "Вы применили Огненный шар! Урон: [dmg]. У врага осталось HP: [enemy.hp]"
+                            $ turn = "enemy"
 
-    # These display lines of dialogue.
+                "Использовать предмет":
+                    menu:
+                        "Зелье ([inventory.get('Зелье',0)] осталось)":
+                            $ used = use_item("Зелье", player)
+                            if used:
+                                "Вы использовали Зелье. Ваше HP: [player.hp]"
+                            else:
+                                "Зелий больше нет!"
+                            $ turn = "enemy"
 
-    steven "Hi, My name is Steven!"
+        else:
+            # Враг атакует
+            $ dmg = attack(enemy, player)
+            "[enemy.name] атакует вас и наносит [dmg] урона! Ваше HP: [player.hp]"
+            $ turn = "player"
 
-    e "You've created a new Ren'Py game."
-
-    e "Once you add a story, pictures, and music, you can release it to the world!"
-
-    # This ends the game.
-
-    return
+    if player.hp <= 0:
+        "Вы были повержены..."
+        return
+    else:
+        "[enemy.name] побеждён!"
+        return
